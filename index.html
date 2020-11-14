@@ -1,5 +1,5 @@
 <html>
-  <head></head>
+  <head> </head>
   <body>
     <div>
       <input id="uploadImage" type="file" onchange="fileChanged(this)" />
@@ -8,94 +8,11 @@
       <canvas id="board" width="426" height="899"></canvas>
     </div>
     <div>
-      ソースは<a href="https://github.com/yfujii01/make_iphone_screenshot">こちら</a>
+      ソースは<a href="https://github.com/yfujii01/make_iphone_screenshot"
+        >こちら</a
+      >
     </div>
 
-    <script>
-      function fileChanged(input) {
-        console.log(input);
-        for (let i = 0; i < input.files.length; i++) {
-          console.log(input.files[i]);
-          makeImage();
-        }
-      }
-
-      function makeImage() {
-        // canvas準備
-        const board = document.querySelector("#board");
-        const ctx = board.getContext("2d");
-
-        const x = 10;
-        const y = 10;
-        const width = 406;
-        const height = 879;
-        const radius = 60;
-
-        ctx.strokeStyle = "rgb(0, 0, 0)";
-        ctx.lineWidth = 20;
-
-        // 枠
-        ctx.beginPath();
-        ctx.moveTo(x + radius, y); // 左上
-        ctx.lineTo(x + width - radius, y); // 左上→右上
-        ctx.quadraticCurveTo(x + width, y, x + width, y + radius); // 右上カーブ
-        ctx.lineTo(x + width, y + height - radius); // 右上→右下
-        ctx.quadraticCurveTo(
-          x + width,
-          y + height,
-          x + width - radius,
-          y + height
-        ); // 右下カーブ
-        ctx.lineTo(x + radius, y + height); // 右下→左下
-        ctx.quadraticCurveTo(x, y + height, x, y + height - radius); // 左下カーブ
-        ctx.lineTo(x, y + radius); // 左下→左上
-        ctx.quadraticCurveTo(x, y, x + radius, y); // 左上カーブ
-        ctx.closePath();
-
-        ctx.stroke();
-        ctx.clip();
-
-        // 画像読み込み
-        var image = new Image();
-        var oFReader = new FileReader();
-        oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
-
-        oFReader.onload = function (oFREvent) {
-          image.onload = function () {
-            ctx.drawImage(image, x, y, width, height);
-
-            // 切り欠き
-            ctx.lineWidth = 40;
-
-            const width_ratio = 3.5;
-            const x2 = x + width / width_ratio;
-            const y2 = y;
-            const width2 = width - (width / width_ratio) * 2;
-            const height2 = height / 60;
-            const radius2 = 1;
-            ctx.beginPath();
-            ctx.moveTo(x2 + width2, y2); // 右上
-            ctx.lineTo(x2 + width2, y2 + height2 - radius2); // 右上→右下
-            ctx.quadraticCurveTo(
-              x2 + width2,
-              y2 + height2,
-              x2 + width2 - radius2,
-              y2 + height2
-            ); // 右下カーブ
-            ctx.lineTo(x2 + radius2, y2 + height2); // 右下→左下
-            ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2); // 左下カーブ
-            ctx.lineTo(x2, y2); // 左下→左上
-
-            ctx.closePath();
-            ctx.stroke();
-          };
-          image.src = oFREvent.target.result;
-        };
-      }
-
-      window.onload = () => {
-        makeImage();
-      };
-    </script>
+    <script src="index.js" />
   </body>
 </html>
