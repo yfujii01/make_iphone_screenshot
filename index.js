@@ -51,6 +51,15 @@ function drawBox(ctx, x, y, w, h, r) {
   ctx.stroke();
 }
 
+function drawCircle(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+
+  ctx.arc(x, y, h, 0, Math.PI * 2, true); // 外の円
+
+  ctx.closePath();
+  ctx.stroke();
+}
+
 function drawFrame(prm) {
   prm.ctx.strokeStyle = "rgb(0, 0, 0)";
   prm.ctx.lineWidth = 20;
@@ -60,7 +69,6 @@ function drawFrame(prm) {
   const w = prm.width;
   const h = prm.height;
   const r = prm.radius;
-
   drawBox(prm.ctx, x, y, w, h, r);
   prm.ctx.clip();
 }
@@ -76,7 +84,6 @@ function drawSpeaker(prm) {
   const h = prm.height / 180;
   const r = prm.radius / 12;
   drawBox(prm.ctx, x, y, w, h, r);
-
 }
 
 function drawCamera(prm) {
@@ -84,50 +91,28 @@ function drawCamera(prm) {
   prm.ctx.lineWidth = 5;
 
   const width_ratio = 1.65;
-  const x2 = prm.x + prm.width / width_ratio;
-  const y2 = prm.y + prm.height / 52;
-  const width2 = prm.width - (prm.width / width_ratio) * 2;
-  const height2 = prm.height / 500;
-  const radius2 = 5;
-  prm.ctx.beginPath();
-
-  prm.ctx.arc(x2, y2, height2, 0, Math.PI * 2, true); // 外の円
-
-  prm.ctx.closePath();
-  prm.ctx.stroke();
+  const x = prm.x + prm.width / width_ratio;
+  const y = prm.y + prm.height / 52;
+  const w = prm.width - (prm.width / width_ratio) * 2;
+  const h = prm.height / 500;
+  const r = 5;
+  drawCircle(prm.ctx, x, y, w, h, r);
 }
 
 function drawNotch(prm) {
-  // 切り欠き(ノッチ)
   prm.ctx.strokeStyle = "rgb(0, 0, 0)";
   prm.ctx.lineWidth = 40;
 
   const width_ratio = 3.5;
-  const x2 = prm.x + prm.width / width_ratio;
-  const y2 = prm.y;
-  const width2 = prm.width - (prm.width / width_ratio) * 2;
-  const height2 = prm.height / 60;
-  const radius2 = 1;
-  prm.ctx.beginPath();
-  prm.ctx.moveTo(x2 + width2, y2); // 右上
-  prm.ctx.lineTo(x2 + width2, y2 + height2 - radius2); // 右上→右下
-  prm.ctx.quadraticCurveTo(
-    x2 + width2,
-    y2 + height2,
-    x2 + width2 - radius2,
-    y2 + height2
-  ); // 右下カーブ
-  prm.ctx.lineTo(x2 + radius2, y2 + height2); // 右下→左下
-  prm.ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2); // 左下カーブ
-  prm.ctx.lineTo(x2, y2); // 左下→左上
-
-  prm.ctx.closePath();
-  prm.ctx.stroke();
+  const x = prm.x + prm.width / width_ratio;
+  const y = prm.y;
+  const w = prm.width - (prm.width / width_ratio) * 2;
+  const h = prm.height / 60;
+  const r = prm.radius / 60;
+  drawBox(prm.ctx, x, y, w, h, r);
 }
 
 function makeImage() {
-  console.log("start make Image!");
-  // canvas準備
   const board = document.querySelector("#board");
   const ctx = board.getContext("2d");
 
@@ -146,10 +131,8 @@ function makeImage() {
 }
 
 function loadImageAndDraw(prm) {
-  // const image = new Image();
   const oFReader = new FileReader();
   const fileDom = document.getElementById("uploadImage");
-  console.log(fileDom.files);
   if (fileDom.files.length > 0) {
     oFReader.readAsDataURL(fileDom.files[0]);
 
@@ -165,13 +148,7 @@ function loadImageAndDraw(prm) {
 }
 
 function drawScreen(prm) {
-  prm.ctx.drawImage(
-    prm.image,
-    prm.x,
-    prm.y,
-    prm.width,
-    prm.height
-  );
+  prm.ctx.drawImage(prm.image, prm.x, prm.y, prm.width, prm.height);
 
   drawNotch(prm);
   drawSpeaker(prm);
