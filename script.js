@@ -1,5 +1,3 @@
-
-
 // 画面ロード時
 window.onload = () => {
   new Draw().makeImage();
@@ -10,7 +8,7 @@ fileChanged = (input) => {
   if (input.files.length > 0) {
     new Draw().makeImage();
   }
-}
+};
 
 const Draw = class {
   P = {
@@ -34,10 +32,9 @@ const Draw = class {
     board.height = this.P.h + this.P.y * 2;
     const ctx = board.getContext("2d");
 
-    this.drawFrame(ctx);
+    // this.drawFrame(ctx);
     this.loadImageAndDraw(ctx);
-  };
-  
+  }
 
   loadImageAndDraw(ctx) {
     const image = new Image();
@@ -60,8 +57,15 @@ const Draw = class {
   }
 
   drawScreen(ctx, image) {
-    ctx.drawImage(image, this.P.x, this.P.y, this.P.w, this.P.h);
+    ctx.drawImage(
+      image,
+      this.P.x * 2,
+      this.P.y * 2,
+      this.P.w - this.P.x * 2,
+      this.P.h - this.P.y * 2
+    );
 
+    this.drawFrame(ctx);
     this.drawNotch(ctx);
     this.drawSpeaker(ctx);
     this.drawCamera(ctx);
@@ -115,12 +119,12 @@ const Draw = class {
     ctx.strokeStyle = "rgb(0, 0, 0)";
     ctx.lineWidth = 40;
 
-    const width_ratio = 3.5;
+    const width_ratio = 3.3;
     const x = this.P.x + this.P.w / width_ratio;
     const y = this.P.y;
     const w = this.P.w - (this.P.w / width_ratio) * 2;
-    const h = this.P.h / 60;
-    const r = this.P.r / 60;
+    const h = this.P.h / 30;
+    const r = this.P.r / 30;
     this.drawBox(ctx, x, y, w, h, r);
   }
 
@@ -130,7 +134,7 @@ const Draw = class {
 
     const width_ratio = 2.3;
     const x = this.P.x + this.P.w / width_ratio;
-    const y = this.P.y + this.P.h / 60;
+    const y = this.P.y + this.P.h / 40;
     const w = this.P.w - (this.P.w / width_ratio) * 2;
     const h = this.P.h / 180;
     const r = this.P.r / 12;
@@ -143,7 +147,7 @@ const Draw = class {
 
     const width_ratio = 1.65;
     const x = this.P.x + this.P.w / width_ratio;
-    const y = this.P.y + this.P.h / 52;
+    const y = this.P.y + this.P.h / 36;
     const h = this.P.h / 500;
     this.drawCircle(ctx, x, y, h);
   }
