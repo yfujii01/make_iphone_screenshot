@@ -1,3 +1,15 @@
+const ImgParam = class {
+  constructor(ctx, x, y, width, height, radius, image){
+    this.ctx=ctx;
+     this.x=x;
+     this.y=y;
+     this.width=width;
+     this.height=height;
+     this.radius=radius;
+     this.image=image;
+  }
+}
+
 function fileChanged(input) {
   console.log(input);
   if (input.files.length > 0) {
@@ -6,52 +18,52 @@ function fileChanged(input) {
   }
 }
 
-function drawFrame(ctx, x, y, width, height, radius) {
-  ctx.strokeStyle = "rgb(0, 0, 0)";
-  ctx.lineWidth = 20;
+function drawFrame(imgParam) {
+  imgParam.ctx.strokeStyle = "rgb(0, 0, 0)";
+  imgParam.ctx.lineWidth = 20;
 
   // 枠
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y); // 左上
-  ctx.lineTo(x + width - radius, y); // 左上→右上
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius); // 右上カーブ
-  ctx.lineTo(x + width, y + height - radius); // 右上→右下
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height); // 右下カーブ
-  ctx.lineTo(x + radius, y + height); // 右下→左下
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius); // 左下カーブ
-  ctx.lineTo(x, y + radius); // 左下→左上
-  ctx.quadraticCurveTo(x, y, x + radius, y); // 左上カーブ
-  ctx.closePath();
+  imgParam.ctx.beginPath();
+  imgParam.ctx.moveTo(imgParam.x + imgParam.radius, imgParam.y); // 左上
+  imgParam.ctx.lineTo(imgParam.x + imgParam.width - imgParam.radius, imgParam.y); // 左上→右上
+  imgParam.ctx.quadraticCurveTo(imgParam.x + imgParam.width, imgParam.y, imgParam.x + imgParam.width, imgParam.y + imgParam.radius); // 右上カーブ
+  imgParam.ctx.lineTo(imgParam.x + imgParam.width, imgParam.y + imgParam.height - imgParam.radius); // 右上→右下
+  imgParam.ctx.quadraticCurveTo(imgParam.x + imgParam.width, imgParam.y + imgParam.height, imgParam.x + imgParam.width - imgParam.radius, imgParam.y + imgParam.height); // 右下カーブ
+  imgParam.ctx.lineTo(imgParam.x + imgParam.radius, imgParam.y + imgParam.height); // 右下→左下
+  imgParam.ctx.quadraticCurveTo(imgParam.x, imgParam.y + imgParam.height, imgParam.x, imgParam.y + imgParam.height - imgParam.radius); // 左下カーブ
+  imgParam.ctx.lineTo(imgParam.x, imgParam.y + imgParam.radius); // 左下→左上
+  imgParam.ctx.quadraticCurveTo(imgParam.x, imgParam.y, imgParam.x + imgParam.radius, imgParam.y); // 左上カーブ
+  imgParam.ctx.closePath();
 
-  ctx.stroke();
-  ctx.clip();
+  imgParam.ctx.stroke();
+  imgParam.ctx.clip();
 }
 
-function drawNotch(ctx, x, y, width, height, radius) {
+function drawNotch(imgParam) {
   // 切り欠き(ノッチ)
-  ctx.lineWidth = 40;
+  imgParam.ctx.lineWidth = 40;
 
   const width_ratio = 3.5;
-  const x2 = x + width / width_ratio;
-  const y2 = y;
-  const width2 = width - (width / width_ratio) * 2;
-  const height2 = height / 60;
+  const x2 = imgParam.x + imgParam.width / width_ratio;
+  const y2 = imgParam.y;
+  const width2 = imgParam.width - (imgParam.width / width_ratio) * 2;
+  const height2 = imgParam.height / 60;
   const radius2 = 1;
-  ctx.beginPath();
-  ctx.moveTo(x2 + width2, y2); // 右上
-  ctx.lineTo(x2 + width2, y2 + height2 - radius2); // 右上→右下
-  ctx.quadraticCurveTo(
+  imgParam.ctx.beginPath();
+  imgParam.ctx.moveTo(x2 + width2, y2); // 右上
+  imgParam.ctx.lineTo(x2 + width2, y2 + height2 - radius2); // 右上→右下
+  imgParam.ctx.quadraticCurveTo(
     x2 + width2,
     y2 + height2,
     x2 + width2 - radius2,
     y2 + height2
   ); // 右下カーブ
-  ctx.lineTo(x2 + radius2, y2 + height2); // 右下→左下
-  ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2); // 左下カーブ
-  ctx.lineTo(x2, y2); // 左下→左上
+  imgParam.ctx.lineTo(x2 + radius2, y2 + height2); // 右下→左下
+  imgParam.ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2); // 左下カーブ
+  imgParam.ctx.lineTo(x2, y2); // 左下→左上
 
-  ctx.closePath();
-  ctx.stroke();
+  imgParam.ctx.closePath();
+  imgParam.ctx.stroke();
 }
 
 function makeImage() {
@@ -66,14 +78,16 @@ function makeImage() {
   const height = 879;
   const radius = 60;
 
-  drawFrame(ctx, x, y, width, height, radius);
+  const imgParam = new ImgParam(ctx, x, y, width, height, radius, new Image());
+
+  drawFrame(imgParam);
 
   // 画像読み込み
-  loadImageAndDraw(ctx, image, x, y, width, height, radius);
+  loadImageAndDraw(imgParam);
 }
 
-function loadImageAndDraw(ctx, image, x, y, width, height, radius) {
-  const image = new Image();
+function loadImageAndDraw(imgParam) {
+  // const image = new Image();
   const oFReader = new FileReader();
   const fileDom = document.getElementById("uploadImage");
   console.log(fileDom.files);
@@ -81,20 +95,20 @@ function loadImageAndDraw(ctx, image, x, y, width, height, radius) {
     oFReader.readAsDataURL(fileDom.files[0]);
 
     oFReader.onload = function (oFREvent) {
-      image.onload = function () {
-        drawScreen(ctx,image, x, y, width, height, radius);
+      imgParam.image.onload = function () {
+        drawScreen(imgParam);
       };
-      image.src = oFREvent.target.result;
+      imgParam.image.src = oFREvent.target.result;
     };
   } else {
-    drawScreen(ctx, image, x, y, width, height, radius);
+    drawScreen(imgParam);
   }
 }
 
-function drawScreen(ctx, image, x, y, width, height, radius) {
-  ctx.drawImage(image, x, y, width, height);
+function drawScreen(imgParam) {
+  imgParam.ctx.drawImage(imgParam.image, imgParam.x, imgParam.y, imgParam.width, imgParam.height);
 
-  drawNotch(ctx, x, y, width, height, radius);
+  drawNotch(imgParam);
 }
 
 window.onload = () => {
