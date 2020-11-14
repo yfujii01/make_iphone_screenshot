@@ -10,6 +10,13 @@ const ImgParam = class {
   }
 };
 
+const Point = class {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+};
+
 function fileChanged(input) {
   console.log(input);
   if (input.files.length > 0) {
@@ -18,54 +25,34 @@ function fileChanged(input) {
   }
 }
 
-function drawFrame(imgParam) {
-  imgParam.ctx.strokeStyle = "rgb(0, 0, 0)";
-  imgParam.ctx.lineWidth = 20;
+function drawFrame(prm) {
+  prm.ctx.strokeStyle = "rgb(0, 0, 0)";
+  prm.ctx.lineWidth = 20;
+
+  const p1 = new Point(prm.x + prm.radius, prm.y);
+  const p2 = new Point(prm.x + prm.width - prm.radius, prm.y);
+  const p3 = new Point(prm.x + prm.width, prm.y + prm.radius);
+  const p4 = new Point(prm.x + prm.width, prm.y + prm.height - prm.radius);
+  const p5 = new Point(prm.x + prm.width - prm.radius, prm.y + prm.height);
+  const p6 = new Point(prm.x + prm.radius, prm.y + prm.height);
+  const p7 = new Point(prm.x, prm.y + prm.height - prm.radius);
+  const p8 = new Point(prm.x, prm.y + prm.radius);
 
   // 枠
-  imgParam.ctx.beginPath();
-  imgParam.ctx.moveTo(imgParam.x + imgParam.radius, imgParam.y); // 左上
-  imgParam.ctx.lineTo(
-    imgParam.x + imgParam.width - imgParam.radius,
-    imgParam.y
-  ); // 左上→右上
-  imgParam.ctx.quadraticCurveTo(
-    imgParam.x + imgParam.width,
-    imgParam.y,
-    imgParam.x + imgParam.width,
-    imgParam.y + imgParam.radius
-  ); // 右上カーブ
-  imgParam.ctx.lineTo(
-    imgParam.x + imgParam.width,
-    imgParam.y + imgParam.height - imgParam.radius
-  ); // 右上→右下
-  imgParam.ctx.quadraticCurveTo(
-    imgParam.x + imgParam.width,
-    imgParam.y + imgParam.height,
-    imgParam.x + imgParam.width - imgParam.radius,
-    imgParam.y + imgParam.height
-  ); // 右下カーブ
-  imgParam.ctx.lineTo(
-    imgParam.x + imgParam.radius,
-    imgParam.y + imgParam.height
-  ); // 右下→左下
-  imgParam.ctx.quadraticCurveTo(
-    imgParam.x,
-    imgParam.y + imgParam.height,
-    imgParam.x,
-    imgParam.y + imgParam.height - imgParam.radius
-  ); // 左下カーブ
-  imgParam.ctx.lineTo(imgParam.x, imgParam.y + imgParam.radius); // 左下→左上
-  imgParam.ctx.quadraticCurveTo(
-    imgParam.x,
-    imgParam.y,
-    imgParam.x + imgParam.radius,
-    imgParam.y
-  ); // 左上カーブ
-  imgParam.ctx.closePath();
+  prm.ctx.beginPath();
+  prm.ctx.moveTo(p1.x, p1.y); // 左上(1)
+  prm.ctx.lineTo(p2.x, p2.y); // 左上→右上(1->2)
+  prm.ctx.quadraticCurveTo(p3.x, p2.y, p3.x, p3.y); // 右上カーブ(2->3)
+  prm.ctx.lineTo(p4.x, p4.y); // 右上→右下(3->4)
+  prm.ctx.quadraticCurveTo(p4.x, p5.y, p5.x, p5.y); // 右下カーブ(4->5)
+  prm.ctx.lineTo(p6.x, p6.y); // 右下→左下(5->6)
+  prm.ctx.quadraticCurveTo(p7.x, p6.y, p7.x, p7.y); // 左下カーブ(6->7)
+  prm.ctx.lineTo(p8.x, p8.y); // 左下→左上(7->8)
+  prm.ctx.quadraticCurveTo(p8.x, p1.y, p1.x, p1.y); // 左上カーブ(8->1)
+  prm.ctx.closePath();
 
-  imgParam.ctx.stroke();
-  imgParam.ctx.clip();
+  prm.ctx.stroke();
+  prm.ctx.clip();
 }
 
 function drawSpeaker(imgParam) {
@@ -118,7 +105,6 @@ function drawCamera(imgParam) {
   imgParam.ctx.stroke();
 }
 
-
 function drawNotch(imgParam) {
   // 切り欠き(ノッチ)
   imgParam.ctx.strokeStyle = "rgb(0, 0, 0)";
@@ -146,7 +132,6 @@ function drawNotch(imgParam) {
   imgParam.ctx.closePath();
   imgParam.ctx.stroke();
 }
-
 
 function makeImage() {
   console.log("start make Image!");
