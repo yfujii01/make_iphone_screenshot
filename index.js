@@ -100,6 +100,24 @@ function drawSpeaker(imgParam) {
   imgParam.ctx.stroke();
 }
 
+function drawCamera(imgParam) {
+  imgParam.ctx.strokeStyle = "rgb(0, 40, 40)";
+  imgParam.ctx.lineWidth = 5;
+
+  const width_ratio = 1.65;
+  const x2 = imgParam.x + imgParam.width / width_ratio;
+  const y2 = imgParam.y + imgParam.height / 52;
+  const width2 = imgParam.width - (imgParam.width / width_ratio) * 2;
+  const height2 = imgParam.height / 500;
+  const radius2 = 5;
+  imgParam.ctx.beginPath();
+
+  imgParam.ctx.arc(x2, y2, height2, 0, Math.PI * 2, true); // 外の円
+
+  imgParam.ctx.closePath();
+  imgParam.ctx.stroke();
+}
+
 
 function drawNotch(imgParam) {
   // 切り欠き(ノッチ)
@@ -180,6 +198,7 @@ function drawScreen(imgParam) {
 
   drawNotch(imgParam);
   drawSpeaker(imgParam);
+  drawCamera(imgParam);
 }
 
 window.onload = () => {
