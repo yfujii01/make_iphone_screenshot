@@ -1,10 +1,4 @@
-const P = {
-  x: 10,
-  y: 10,
-  w: 406,
-  h: 879,
-  r: 60,
-};
+
 
 // 画面ロード時
 window.onload = () => {
@@ -19,6 +13,14 @@ fileChanged = (input) => {
 }
 
 const Draw = class {
+  P = {
+    x: 10,
+    y: 10,
+    w: 406,
+    h: 879,
+    r: 60,
+  };
+
   Point = class {
     constructor(x, y) {
       this.x = x;
@@ -27,7 +29,11 @@ const Draw = class {
   };
 
   makeImage() {
-    const ctx = document.querySelector("#board").getContext("2d");
+    const board = document.querySelector("#board");
+    board.width = this.P.w + this.P.x * 2;
+    board.height = this.P.h + this.P.y * 2;
+    const ctx = board.getContext("2d");
+
     this.drawFrame(ctx);
     this.loadImageAndDraw(ctx);
   };
@@ -54,7 +60,7 @@ const Draw = class {
   }
 
   drawScreen(ctx, image) {
-    ctx.drawImage(image, P.x, P.y, P.w, P.h);
+    ctx.drawImage(image, this.P.x, this.P.y, this.P.w, this.P.h);
 
     this.drawNotch(ctx);
     this.drawSpeaker(ctx);
@@ -96,13 +102,26 @@ const Draw = class {
     ctx.strokeStyle = "rgb(0, 0, 0)";
     ctx.lineWidth = 20;
 
-    const x = P.x;
-    const y = P.y;
-    const w = P.w;
-    const h = P.h;
-    const r = P.r;
+    const x = this.P.x;
+    const y = this.P.y;
+    const w = this.P.w;
+    const h = this.P.h;
+    const r = this.P.r;
     this.drawBox(ctx, x, y, w, h, r);
     ctx.clip();
+  }
+
+  drawNotch(ctx) {
+    ctx.strokeStyle = "rgb(0, 0, 0)";
+    ctx.lineWidth = 40;
+
+    const width_ratio = 3.5;
+    const x = this.P.x + this.P.w / width_ratio;
+    const y = this.P.y;
+    const w = this.P.w - (this.P.w / width_ratio) * 2;
+    const h = this.P.h / 60;
+    const r = this.P.r / 60;
+    this.drawBox(ctx, x, y, w, h, r);
   }
 
   drawSpeaker(ctx) {
@@ -110,11 +129,11 @@ const Draw = class {
     ctx.lineWidth = 5;
 
     const width_ratio = 2.3;
-    const x = P.x + P.w / width_ratio;
-    const y = P.y + P.h / 60;
-    const w = P.w - (P.w / width_ratio) * 2;
-    const h = P.h / 180;
-    const r = P.r / 12;
+    const x = this.P.x + this.P.w / width_ratio;
+    const y = this.P.y + this.P.h / 60;
+    const w = this.P.w - (this.P.w / width_ratio) * 2;
+    const h = this.P.h / 180;
+    const r = this.P.r / 12;
     this.drawBox(ctx, x, y, w, h, r);
   }
 
@@ -123,22 +142,9 @@ const Draw = class {
     ctx.lineWidth = 5;
 
     const width_ratio = 1.65;
-    const x = P.x + P.w / width_ratio;
-    const y = P.y + P.h / 52;
-    const h = P.h / 500;
+    const x = this.P.x + this.P.w / width_ratio;
+    const y = this.P.y + this.P.h / 52;
+    const h = this.P.h / 500;
     this.drawCircle(ctx, x, y, h);
-  }
-
-  drawNotch(ctx) {
-    ctx.strokeStyle = "rgb(0, 0, 0)";
-    ctx.lineWidth = 40;
-
-    const width_ratio = 3.5;
-    const x = P.x + P.w / width_ratio;
-    const y = P.y;
-    const w = P.w - (P.w / width_ratio) * 2;
-    const h = P.h / 60;
-    const r = P.r / 60;
-    this.drawBox(ctx, x, y, w, h, r);
   }
 };
