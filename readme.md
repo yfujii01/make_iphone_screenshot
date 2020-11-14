@@ -2,7 +2,7 @@
 
 以下のURLからどうぞ
 
-https://yfujii01.github.io/make_iphone_screenshot/
+https://make-iphone-screenshot.netlify.app/
 
 ファイル選択後、表示される画像を右クリックから保存してください。
 
