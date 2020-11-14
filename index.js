@@ -25,7 +25,16 @@ function fileChanged(input) {
   }
 }
 
-function drawBox(ctx, p1, p2, p3, p4, p5, p6, p7, p8) {
+function drawBox(ctx, x, y, w, h, r) {
+  const p1 = new Point(x + r, y);
+  const p2 = new Point(x + w - r, y);
+  const p3 = new Point(x + w, y + r);
+  const p4 = new Point(x + w, y + h - r);
+  const p5 = new Point(x + w - r, y + h);
+  const p6 = new Point(x + r, y + h);
+  const p7 = new Point(x, y + h - r);
+  const p8 = new Point(x, y + r);
+
   // 枠
   ctx.beginPath();
   ctx.moveTo(p1.x, p1.y); // 左上(1)
@@ -46,95 +55,74 @@ function drawFrame(prm) {
   prm.ctx.strokeStyle = "rgb(0, 0, 0)";
   prm.ctx.lineWidth = 20;
 
-  const p1 = new Point(prm.x + prm.radius, prm.y);
-  const p2 = new Point(prm.x + prm.width - prm.radius, prm.y);
-  const p3 = new Point(prm.x + prm.width, prm.y + prm.radius);
-  const p4 = new Point(prm.x + prm.width, prm.y + prm.height - prm.radius);
-  const p5 = new Point(prm.x + prm.width - prm.radius, prm.y + prm.height);
-  const p6 = new Point(prm.x + prm.radius, prm.y + prm.height);
-  const p7 = new Point(prm.x, prm.y + prm.height - prm.radius);
-  const p8 = new Point(prm.x, prm.y + prm.radius);
+  const x = prm.x;
+  const y = prm.y;
+  const w = prm.width;
+  const h = prm.height;
+  const r = prm.radius;
 
-  drawBox(prm.ctx, p1, p2, p3, p4, p5, p6, p7, p8);
+  drawBox(prm.ctx, x, y, w, h, r);
   prm.ctx.clip();
 }
 
-function drawSpeaker(imgParam) {
-  imgParam.ctx.strokeStyle = "rgb(50, 50, 50)";
-  imgParam.ctx.lineWidth = 5;
+function drawSpeaker(prm) {
+  prm.ctx.strokeStyle = "rgb(50, 50, 50)";
+  prm.ctx.lineWidth = 5;
 
   const width_ratio = 2.3;
-  const x2 = imgParam.x + imgParam.width / width_ratio;
-  const y2 = imgParam.y + imgParam.height / 60;
-  const width2 = imgParam.width - (imgParam.width / width_ratio) * 2;
-  const height2 = imgParam.height / 180;
-  const radius2 = 5;
-  imgParam.ctx.beginPath();
+  const x = prm.x + prm.width / width_ratio;
+  const y = prm.y + prm.height / 60;
+  const w = prm.width - (prm.width / width_ratio) * 2;
+  const h = prm.height / 180;
+  const r = prm.radius / 12;
+  drawBox(prm.ctx, x, y, w, h, r);
 
-  imgParam.ctx.moveTo(x2 + radius2, y2); // 左上
-  imgParam.ctx.lineTo(x2 + width2 - radius2, y2); // 左上→右上
-  imgParam.ctx.quadraticCurveTo(x2 + width2, y2, x2 + width2, y2 + radius2); // 右上カーブ
-
-  imgParam.ctx.lineTo(x2 + width2, y2 + height2 - radius2); // 右上→右下
-  imgParam.ctx.quadraticCurveTo(
-    x2 + width2,
-    y2 + height2,
-    x2 + width2 - radius2,
-    y2 + height2
-  ); // 右下カーブ
-  imgParam.ctx.lineTo(x2 + radius2, y2 + height2); // 右下→左下
-  imgParam.ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2); // 左下カーブ
-  imgParam.ctx.lineTo(x2, y2 + radius2); // 左下→左上
-  imgParam.ctx.quadraticCurveTo(x2, y2, x2 + radius2, y2); // 左上カーブ
-
-  imgParam.ctx.closePath();
-  imgParam.ctx.stroke();
 }
 
-function drawCamera(imgParam) {
-  imgParam.ctx.strokeStyle = "rgb(0, 40, 40)";
-  imgParam.ctx.lineWidth = 5;
+function drawCamera(prm) {
+  prm.ctx.strokeStyle = "rgb(0, 40, 40)";
+  prm.ctx.lineWidth = 5;
 
   const width_ratio = 1.65;
-  const x2 = imgParam.x + imgParam.width / width_ratio;
-  const y2 = imgParam.y + imgParam.height / 52;
-  const width2 = imgParam.width - (imgParam.width / width_ratio) * 2;
-  const height2 = imgParam.height / 500;
+  const x2 = prm.x + prm.width / width_ratio;
+  const y2 = prm.y + prm.height / 52;
+  const width2 = prm.width - (prm.width / width_ratio) * 2;
+  const height2 = prm.height / 500;
   const radius2 = 5;
-  imgParam.ctx.beginPath();
+  prm.ctx.beginPath();
 
-  imgParam.ctx.arc(x2, y2, height2, 0, Math.PI * 2, true); // 外の円
+  prm.ctx.arc(x2, y2, height2, 0, Math.PI * 2, true); // 外の円
 
-  imgParam.ctx.closePath();
-  imgParam.ctx.stroke();
+  prm.ctx.closePath();
+  prm.ctx.stroke();
 }
 
-function drawNotch(imgParam) {
+function drawNotch(prm) {
   // 切り欠き(ノッチ)
-  imgParam.ctx.strokeStyle = "rgb(0, 0, 0)";
-  imgParam.ctx.lineWidth = 40;
+  prm.ctx.strokeStyle = "rgb(0, 0, 0)";
+  prm.ctx.lineWidth = 40;
 
   const width_ratio = 3.5;
-  const x2 = imgParam.x + imgParam.width / width_ratio;
-  const y2 = imgParam.y;
-  const width2 = imgParam.width - (imgParam.width / width_ratio) * 2;
-  const height2 = imgParam.height / 60;
+  const x2 = prm.x + prm.width / width_ratio;
+  const y2 = prm.y;
+  const width2 = prm.width - (prm.width / width_ratio) * 2;
+  const height2 = prm.height / 60;
   const radius2 = 1;
-  imgParam.ctx.beginPath();
-  imgParam.ctx.moveTo(x2 + width2, y2); // 右上
-  imgParam.ctx.lineTo(x2 + width2, y2 + height2 - radius2); // 右上→右下
-  imgParam.ctx.quadraticCurveTo(
+  prm.ctx.beginPath();
+  prm.ctx.moveTo(x2 + width2, y2); // 右上
+  prm.ctx.lineTo(x2 + width2, y2 + height2 - radius2); // 右上→右下
+  prm.ctx.quadraticCurveTo(
     x2 + width2,
     y2 + height2,
     x2 + width2 - radius2,
     y2 + height2
   ); // 右下カーブ
-  imgParam.ctx.lineTo(x2 + radius2, y2 + height2); // 右下→左下
-  imgParam.ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2); // 左下カーブ
-  imgParam.ctx.lineTo(x2, y2); // 左下→左上
+  prm.ctx.lineTo(x2 + radius2, y2 + height2); // 右下→左下
+  prm.ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2); // 左下カーブ
+  prm.ctx.lineTo(x2, y2); // 左下→左上
 
-  imgParam.ctx.closePath();
-  imgParam.ctx.stroke();
+  prm.ctx.closePath();
+  prm.ctx.stroke();
 }
 
 function makeImage() {
@@ -157,7 +145,7 @@ function makeImage() {
   loadImageAndDraw(imgParam);
 }
 
-function loadImageAndDraw(imgParam) {
+function loadImageAndDraw(prm) {
   // const image = new Image();
   const oFReader = new FileReader();
   const fileDom = document.getElementById("uploadImage");
@@ -166,28 +154,28 @@ function loadImageAndDraw(imgParam) {
     oFReader.readAsDataURL(fileDom.files[0]);
 
     oFReader.onload = function (oFREvent) {
-      imgParam.image.onload = function () {
-        drawScreen(imgParam);
+      prm.image.onload = function () {
+        drawScreen(prm);
       };
-      imgParam.image.src = oFREvent.target.result;
+      prm.image.src = oFREvent.target.result;
     };
   } else {
-    drawScreen(imgParam);
+    drawScreen(prm);
   }
 }
 
-function drawScreen(imgParam) {
-  imgParam.ctx.drawImage(
-    imgParam.image,
-    imgParam.x,
-    imgParam.y,
-    imgParam.width,
-    imgParam.height
+function drawScreen(prm) {
+  prm.ctx.drawImage(
+    prm.image,
+    prm.x,
+    prm.y,
+    prm.width,
+    prm.height
   );
 
-  drawNotch(imgParam);
-  drawSpeaker(imgParam);
-  drawCamera(imgParam);
+  drawNotch(prm);
+  drawSpeaker(prm);
+  drawCamera(prm);
 }
 
 window.onload = () => {
