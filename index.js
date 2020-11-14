@@ -25,6 +25,23 @@ function fileChanged(input) {
   }
 }
 
+function drawBox(ctx, p1, p2, p3, p4, p5, p6, p7, p8) {
+  // 枠
+  ctx.beginPath();
+  ctx.moveTo(p1.x, p1.y); // 左上(1)
+  ctx.lineTo(p2.x, p2.y); // 左上→右上(1->2)
+  ctx.quadraticCurveTo(p3.x, p2.y, p3.x, p3.y); // 右上カーブ(2->3)
+  ctx.lineTo(p4.x, p4.y); // 右上→右下(3->4)
+  ctx.quadraticCurveTo(p4.x, p5.y, p5.x, p5.y); // 右下カーブ(4->5)
+  ctx.lineTo(p6.x, p6.y); // 右下→左下(5->6)
+  ctx.quadraticCurveTo(p7.x, p6.y, p7.x, p7.y); // 左下カーブ(6->7)
+  ctx.lineTo(p8.x, p8.y); // 左下→左上(7->8)
+  ctx.quadraticCurveTo(p8.x, p1.y, p1.x, p1.y); // 左上カーブ(8->1)
+  ctx.closePath();
+
+  ctx.stroke();
+}
+
 function drawFrame(prm) {
   prm.ctx.strokeStyle = "rgb(0, 0, 0)";
   prm.ctx.lineWidth = 20;
@@ -38,20 +55,7 @@ function drawFrame(prm) {
   const p7 = new Point(prm.x, prm.y + prm.height - prm.radius);
   const p8 = new Point(prm.x, prm.y + prm.radius);
 
-  // 枠
-  prm.ctx.beginPath();
-  prm.ctx.moveTo(p1.x, p1.y); // 左上(1)
-  prm.ctx.lineTo(p2.x, p2.y); // 左上→右上(1->2)
-  prm.ctx.quadraticCurveTo(p3.x, p2.y, p3.x, p3.y); // 右上カーブ(2->3)
-  prm.ctx.lineTo(p4.x, p4.y); // 右上→右下(3->4)
-  prm.ctx.quadraticCurveTo(p4.x, p5.y, p5.x, p5.y); // 右下カーブ(4->5)
-  prm.ctx.lineTo(p6.x, p6.y); // 右下→左下(5->6)
-  prm.ctx.quadraticCurveTo(p7.x, p6.y, p7.x, p7.y); // 左下カーブ(6->7)
-  prm.ctx.lineTo(p8.x, p8.y); // 左下→左上(7->8)
-  prm.ctx.quadraticCurveTo(p8.x, p1.y, p1.x, p1.y); // 左上カーブ(8->1)
-  prm.ctx.closePath();
-
-  prm.ctx.stroke();
+  drawBox(prm.ctx, p1, p2, p3, p4, p5, p6, p7, p8);
   prm.ctx.clip();
 }
 
