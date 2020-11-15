@@ -1,4 +1,4 @@
-# iPhone12のスクショを切り欠き付きで保存したい
+# iPhone12のスクショをノッチ付きで保存する
 
 以下のURLからどうぞ
 
@@ -8,7 +8,7 @@ https://make-iphone-screenshot.netlify.app/
 
 ## 設計
 
-![図1](img/2020-11-14-17-04-01.png)
+![図1](img/image01.png)
 
 |No|x位置|y位置|
 |---|---|---|
@@ -21,4 +21,4 @@ https://make-iphone-screenshot.netlify.app/
 |⑦|x|y + h - r|
 |⑧|x|y + r|
 
-![図2](img/2020-11-14-16-59-08.png)
+![図2](img/image02.png)
