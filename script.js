@@ -12,11 +12,11 @@ fileChanged = (input) => {
 
 const Draw = class {
   P = {
-    x: 10,
-    y: 10,
-    w: 406,
-    h: 879,
-    r: 60,
+    x: 13,
+    y: 13,
+    w: 330,
+    h: 330 * 2.166,
+    r: 330 * 0.148,
   };
 
   Point = class {
@@ -45,24 +45,30 @@ const Draw = class {
     if (fileDom.files.length > 0) {
       oFReader.readAsDataURL(fileDom.files[0]);
 
-      oFReader.onload = function (oFREvent) {
-        image.onload = function () {
+      oFReader.onload = (oFREvent) => {
+        image.src = oFREvent.target.result;
+        image.onload = () => {
           _self.drawScreen(ctx, image);
         };
-        image.src = oFREvent.target.result;
       };
     } else {
-      this.drawScreen(ctx, image);
+      // 画像未選択のときはサンプル画像を表示
+      image.src = "/img/sample.png";
+      image.onload = () => {
+        _self.drawScreen(ctx, image);
+      };
     }
   }
 
   drawScreen(ctx, image) {
+    const ratio = 1.8;
+    const ratio2 = 1.3;
     ctx.drawImage(
       image,
-      this.P.x * 2,
-      this.P.y * 2,
-      this.P.w - this.P.x * 2,
-      this.P.h - this.P.y * 2
+      this.P.x * ratio,
+      this.P.y * ratio,
+      this.P.w - this.P.x * ratio2,
+      this.P.h - this.P.y * ratio2
     );
 
     this.drawFrame(ctx);
